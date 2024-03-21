@@ -1,0 +1,78 @@
+﻿@using Org_DAL.Models
+@model IEnumerable<ProductDetail>
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<h3 class="text-center">Quản lý sản phẩm</h3>
+ 
+<div class="container">
+    <div class="d-flex justify-content-end mt-3 mb-3">
+        <a class="btn btn-outline-primary" asp-controller="Product" asp-action="Create">
+            Thêm sản phẩm mới
+        </a>
+    </div>
+    <div>
+        <table class="table w-100 text-center table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        STT
+                    </th>
+                    <th>
+                        Tên Sản Phẩm
+                    </th>
+                    <th>
+                        Số lượng
+                    </th>
+                    <th>
+                        Loại
+                    </th>
+                    <th>
+                        Hạn sử dụng
+                    </th>
+                    <th>
+                        Thao tác
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Select((value, i) => (value, i)))
+                {
+                    <tr>
+                        <td>
+                            @(item.i+1)
+                        </td>
+                        <td>
+                            @item.value.ProductName
+                        </td>
+                        <td>
+                            @item.value.Quantity
+                        </td>
+                        <td>
+                            @item.value.TypeClosure
+                        </td>
+                        <td>
+                            @item.value.EXP.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            <button class="btn btn-success m-2">
+                                Chi tiết
+                            </button>
+
+                            <button class="btn btn-warning m-2">
+                                Sửa
+                            </button>
+
+                            <button class="btn btn-danger m-2">
+                                Xoá
+                            </button>
+                        </td>
+                    </tr>                
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
