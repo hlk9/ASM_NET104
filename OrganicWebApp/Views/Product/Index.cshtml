@@ -1,5 +1,5 @@
 ﻿@using Org_DAL.Models
-@model IEnumerable<ProductDetail>
+@model IEnumerable<Product>
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
 }
@@ -52,27 +52,57 @@
                         </td>
                         <td>
                             @item.value.TypeClosure
+                            
                         </td>
                         <td>
                             @item.value.EXP.ToString("dd/MM/yyyy")
                         </td>
                         <td>
-                            <button class="btn btn-success m-2">
+                            <a class="btn btn-success m-2" asp-controller="Product" asp-action="Detail" asp-route-id="@item.value.Id">
                                 Chi tiết
-                            </button>
+                            </a>
 
-                            <button class="btn btn-warning m-2">
+                            <a class="btn btn-warning m-2" asp-controller="Product" asp-action="Edit" asp-route-id="@item.value.Id">
                                 Sửa
-                            </button>
+                            </a>
 
-                            <button class="btn btn-danger m-2">
+                            <a class="btn btn-danger m-2 delete-button" id="@item.value.Id"  data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Xoá
-                            </button>
+                            </a>
                         </td>
                     </tr>                
                 }
             </tbody>
         </table>
     </div>
+    <div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận XOÁ?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>                 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
+                        <a type="button" id="buttonConfirmDelete" asp-controller="Product" asp-action="Delete" asp-route-id="" class="btn btn-primary">Xác nhận</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 </div>
+<script>
+    document.querySelectorAll('.delete-button').forEach(function (button) {
+        button.addEventListener('click', function () {          
+            var originHref = document.getElementById('buttonConfirmDelete').getAttribute('href')
+            document.getElementById('buttonConfirmDelete').setAttribute('href',originHref+"/"+button.id)
+        });
+    });
+</script>
 
