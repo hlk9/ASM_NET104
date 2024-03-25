@@ -17,7 +17,6 @@ namespace OrganicWebApp.Controllers
             return View(products);
         }
 
-
         public IActionResult Create()
         {
             var listCate = _categories.GetAll();
