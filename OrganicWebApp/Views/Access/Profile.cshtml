@@ -1,0 +1,88 @@
+﻿@using Org_DAL.Models
+@model Org_DAL.Models.User
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container vh-100 mt-5">
+	<div class="row gutters">
+		<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+			<div class="card h-100">
+				<div class="card-body">
+					<div class="account-settings">
+						<div class="user-profile">
+							<div class="user-avatar">
+								<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
+							</div>
+							<h5 class="user-name">@Model.FullName</h5>
+							<h6 class="user-email">@Model.Email</h6>
+						</div>
+						<div class="about">
+							<h5>Thông tin</h5>
+							<p>Thông tin chi tiết của tài khoản</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+			<div class="card h-100">
+				<div class="card-body">
+					<div class="row gutters">
+						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+							<h6 class="mb-2 text-primary">Chi tiết</h6>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label for="Street">Username</label>
+								<input type="name" asp-for="UserName" class="form-control" id="Street" placeholder="Enter Street" disabled>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label for="fullName">Full Name</label>
+								<input type="text" class="form-control" id="fullName" asp-for="FullName" placeholder="Enter full name" disabled>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label for="eMail">Email</label>
+								<input type="email" class="form-control" id="eMail" asp-for="Email" placeholder="Enter email ID" disabled>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label for="phone">Phone</label>
+								<input type="text" class="form-control" id="phone" asp-for="Phone" placeholder="Enter phone number" disabled>
+							</div>
+						</div>
+						<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+							<div class="form-group">
+								<label for="website">Ngày Sinh</label>
+								<input type="date" class="form-control" id="website" asp-for="DateOfBirth" placeholder="Website url" disabled>
+							</div>
+						</div>
+					</div>
+				
+					<div class="row gutters mt-5">
+						<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex justify-content-between">
+							<div class="text-right">
+								<button type="button" id="submit" name="submit" class="btn btn-secondary">Trở lại</button>
+								<button type="button" id="submit" name="submit" class="btn btn-primary">Sửa</button>
+							</div>
+							<div>
+								<a class="btn btn-warning" asp-controller="Access" asp-action="Logout">
+									Đăng Xuất
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<link rel="stylesheet" href="~/css/Profile/Profile.css" />
+<style>
+
+</style>
