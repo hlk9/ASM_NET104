@@ -1,0 +1,52 @@
+﻿@using Org_DAL.Models
+@model ICollection<User>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Danh sách Người dùng</h3>
+
+<table class="table table-striped w-100 align-baseline">
+    <thead>
+        <tr>
+            <th>
+                UserName
+            </th>
+            <th>
+                Họ Tên
+            </th>
+            <th>
+                Ngày Sinh
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Số điện thoại
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.UserName
+                </td>
+                <td>
+                    @item.FullName
+                </td>
+                <td>
+                    @item.DateOfBirth.Value.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.Phone
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

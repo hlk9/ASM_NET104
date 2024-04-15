@@ -3,10 +3,10 @@ using Org_DAL.Models;
 
 namespace Org_DAL.Repository;
 
-public class CouponCategory
+public class CouponRepository
 {
     OrganicDbContext _context;
-    public CouponCategory()
+    public CouponRepository()
     {
         _context = new OrganicDbContext();
     }
@@ -50,10 +50,10 @@ public class CouponCategory
         try
         {
            var couponToUpdate = _context.Coupons.Find(coupon.Id);
-           couponToUpdate.Discount = coupon.CouponCode;
+           couponToUpdate.CouponCode = coupon.CouponCode;
            couponToUpdate.Discount = coupon.Discount;
-           couponToUpdate.Status = coupon.Status;
-           couponToUpdate.ExpiryDate = coupon.ExpiryDate;
+           couponToUpdate.IsActived = coupon.IsActived;
+           couponToUpdate.ExpriationDate = coupon.ExpriationDate;
            
             _context.SaveChanges();
             return true;
@@ -63,6 +63,8 @@ public class CouponCategory
             return false;
         }
     }
+    
+    
     
 
 }

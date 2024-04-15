@@ -16,6 +16,6 @@ namespace Org_DAL.Models
         public DateTime ExpriationDate { get; set; }
         public bool IsActived { get; set; } = true;
          
-        public ICollection<ProductDetail> ProductDetails { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }

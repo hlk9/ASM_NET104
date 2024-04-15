@@ -3,6 +3,7 @@ using Org_DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace Org_DAL.Context
         public OrganicDbContext(DbContextOptions<OrganicDbContext> options) : base(options) 
         {
 
-        }
+        } 
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -28,7 +29,6 @@ namespace Org_DAL.Context
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceDetail> InvoicesDetail { get; set; }
-        public DbSet<ProductDetail> ProductDetail { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<User> Users { get; set; }
@@ -39,6 +39,11 @@ namespace Org_DAL.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Organic;Integrated Security=True");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
     }

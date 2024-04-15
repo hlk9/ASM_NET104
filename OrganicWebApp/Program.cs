@@ -2,6 +2,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
+builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
 
 var app = builder.Build();
 
@@ -17,8 +26,20 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    //endpoints.MapControllerRoute(
+    //     name: "areas",
+    //     pattern: "{area:exists}/{controller=Home}/{action}/{id?}");
+
+    //endpoints.MapControllerRoute(
+    //    name: "default",
+    //    pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.MapControllerRoute(
     name: "default",

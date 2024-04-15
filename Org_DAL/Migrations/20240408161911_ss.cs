@@ -31,6 +31,7 @@ namespace Org_DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CouponCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Discount = table.Column<double>(type: "float", nullable: false),
                     ExpriationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsActived = table.Column<bool>(type: "bit", nullable: false)
@@ -73,17 +74,16 @@ namespace Org_DAL.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<bool>(type: "bit", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Gender = table.Column<bool>(type: "bit", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
@@ -98,22 +98,33 @@ namespace Org_DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false)
+                    Weight = table.Column<double>(type: "float", nullable: true),
+                    TypeClosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EXP = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MFG = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Priced = table.Column<double>(type: "float", nullable: false),
+                    ListedPriced = table.Column<double>(type: "float", nullable: true),
+                    SaleId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false),
+                    ProductDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
+                        name: "FK_Category_Product",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_Sale",
+                        column: x => x.SaleId,
+                        principalTable: "Sales",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -122,13 +133,13 @@ namespace Org_DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Carts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Carts_Users_UserId",
+                        name: "FK_Cart_User",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -141,24 +152,24 @@ namespace Org_DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
-                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     CouponId = table.Column<int>(type: "int", nullable: false),
-                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Invoices_Coupons_CouponId",
+                        name: "FK_Invoice_Coupon",
                         column: x => x.CouponId,
                         principalTable: "Coupons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Invoices_Users_UserId",
+                        name: "FK_Invoice_User",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -171,7 +182,7 @@ namespace Org_DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -194,20 +205,20 @@ namespace Org_DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserRoles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserRoles_Roles_RoleId",
+                        name: "FK_UserRole_Role",
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_Users_UserId",
+                        name: "FK_UserRole_User",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -221,7 +232,7 @@ namespace Org_DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CartId = table.Column<int>(type: "int", nullable: false),
-                    ProductDetailId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false)
                 },
@@ -234,44 +245,10 @@ namespace Org_DAL.Migrations
                         principalTable: "Carts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductDetail",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Weight = table.Column<double>(type: "float", nullable: true),
-                    TypeClosure = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EXP = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MFG = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
-                    Priced = table.Column<double>(type: "float", nullable: false),
-                    ListedPriced = table.Column<double>(type: "float", nullable: false),
-                    SaleId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false),
-                    CartItemId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductDetail_CartItems_CartItemId",
-                        column: x => x.CartItemId,
-                        principalTable: "CartItems",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductDetail_Products_ProductId",
+                        name: "FK_CartItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductDetail_Sales_SaleId",
-                        column: x => x.SaleId,
-                        principalTable: "Sales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -283,8 +260,7 @@ namespace Org_DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
-                    ProducDetailtId = table.Column<int>(type: "int", nullable: false),
-                    ProductDetailId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Total = table.Column<double>(type: "float", nullable: false)
@@ -293,17 +269,16 @@ namespace Org_DAL.Migrations
                 {
                     table.PrimaryKey("PK_InvoicesDetail", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InvoicesDetail_Invoices_InvoiceId",
+                        name: "FK_InvoiceDetail_Invoice",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoicesDetail_ProductDetail_ProductDetailId",
-                        column: x => x.ProductDetailId,
-                        principalTable: "ProductDetail",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_InvoiceDetail_ProductDetail",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -312,14 +287,15 @@ namespace Org_DAL.Migrations
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItems_ProductDetailId",
+                name: "IX_CartItems_ProductId",
                 table: "CartItems",
-                column: "ProductDetailId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_UserId",
                 table: "Carts",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_CouponId",
@@ -337,29 +313,20 @@ namespace Org_DAL.Migrations
                 column: "InvoiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoicesDetail_ProductDetailId",
+                name: "IX_InvoicesDetail_ProductId",
                 table: "InvoicesDetail",
-                column: "ProductDetailId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductDetail_CartItemId",
-                table: "ProductDetail",
-                column: "CartItemId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductDetail_ProductId",
-                table: "ProductDetail",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductDetail_SaleId",
-                table: "ProductDetail",
-                column: "SaleId");
+                column: "ProductId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_SaleId",
+                table: "Products",
+                column: "SaleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAddresses_UserId",
@@ -376,24 +343,17 @@ namespace Org_DAL.Migrations
                 table: "UserRoles",
                 column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_CartItems_ProductDetail_ProductDetailId",
-                table: "CartItems",
-                column: "ProductDetailId",
-                principalTable: "ProductDetail",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserName",
+                table: "Users",
+                column: "UserName",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_CartItems_Carts_CartId",
-                table: "CartItems");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_CartItems_ProductDetail_ProductDetailId",
-                table: "CartItems");
+            migrationBuilder.DropTable(
+                name: "CartItems");
 
             migrationBuilder.DropTable(
                 name: "InvoicesDetail");
@@ -405,7 +365,13 @@ namespace Org_DAL.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
+                name: "Carts");
+
+            migrationBuilder.DropTable(
                 name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Roles");
@@ -414,25 +380,13 @@ namespace Org_DAL.Migrations
                 name: "Coupons");
 
             migrationBuilder.DropTable(
-                name: "Carts");
-
-            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "ProductDetail");
-
-            migrationBuilder.DropTable(
-                name: "CartItems");
-
-            migrationBuilder.DropTable(
-                name: "Products");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Sales");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
         }
     }
 }

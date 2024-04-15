@@ -2,7 +2,10 @@
 @model IEnumerable<Product>
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
+    Layout = "_Layout";
+    
 }
+
 
 <h3 class="text-center">Quản lý sản phẩm</h3>
  
@@ -13,7 +16,7 @@
         </a>
     </div>
     <div>
-        <table class="table w-100 text-center table-striped">
+        <table class="table w-100 text-center table-striped align-baseline">
             <thead>
                 <tr>
                     <th>
@@ -69,6 +72,7 @@
                             <a class="btn btn-danger m-2 delete-button" id="@item.value.Id"  data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 Xoá
                             </a>
+
                         </td>
                     </tr>                
                 }
@@ -88,7 +92,7 @@
                     </div>                 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ</button>
-                        <a type="button" id="buttonConfirmDelete" asp-controller="Product" asp-action="Delete" asp-route-id="" class="btn btn-primary">Xác nhận</a>
+                        <a id="buttonConfirmDelete" asp-controller="Product" asp-action="Delete" asp-route-id="" class="btn btn-primary">Xác nhận</a>
                     </div>
                 </div>
             </div>

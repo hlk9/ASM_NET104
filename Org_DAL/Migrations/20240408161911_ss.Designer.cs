@@ -12,7 +12,7 @@ using Org_DAL.Context;
 namespace Org_DAL.Migrations
 {
     [DbContext(typeof(OrganicDbContext))]
-    [Migration("20240313143302_ss")]
+    [Migration("20240408161911_ss")]
     partial class ss
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,12 +32,13 @@ namespace Org_DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Carts");
                 });
@@ -53,7 +54,7 @@ namespace Org_DAL.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductDetailId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -66,7 +67,8 @@ namespace Org_DAL.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("ProductDetailId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.ToTable("CartItems");
                 });
@@ -106,6 +108,10 @@ namespace Org_DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CouponCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Discount")
                         .HasColumnType("float");
 
@@ -132,7 +138,7 @@ namespace Org_DAL.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateAt")
+                    b.Property<DateTime?>("CreateAt")
                         .HasColumnType("datetime2");
 
                     b.Property<byte>("Status")
@@ -141,11 +147,11 @@ namespace Org_DAL.Migrations
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("UpdateAt")
+                    b.Property<DateTime?>("UpdateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -170,10 +176,7 @@ namespace Org_DAL.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProducDetailtId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductDetailId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -186,7 +189,8 @@ namespace Org_DAL.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.HasIndex("ProductDetailId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.ToTable("InvoicesDetail");
                 });
@@ -202,49 +206,13 @@ namespace Org_DAL.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
-                    b.Property<DateTime>("UpdateAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Org_DAL.Models.ProductDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int?>("CartItemId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("EXP")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("ListedPriced")
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("ListedPriced")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("MFG")
@@ -253,13 +221,17 @@ namespace Org_DAL.Migrations
                     b.Property<double>("Priced")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SaleId")
+                    b.Property<int?>("SaleId")
                         .HasColumnType("int");
 
                     b.Property<byte>("Status")
@@ -273,13 +245,11 @@ namespace Org_DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartItemId");
-
-                    b.HasIndex("ProductId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("ProductDetail");
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Role", b =>
@@ -327,16 +297,14 @@ namespace Org_DAL.Migrations
 
             modelBuilder.Entity("Org_DAL.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -347,7 +315,7 @@ namespace Org_DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Gender")
+                    b.Property<bool?>("Gender")
                         .HasColumnType("bit");
 
                     b.Property<string>("Password")
@@ -355,20 +323,23 @@ namespace Org_DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -395,8 +366,8 @@ namespace Org_DAL.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -416,8 +387,8 @@ namespace Org_DAL.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -431,10 +402,11 @@ namespace Org_DAL.Migrations
             modelBuilder.Entity("Org_DAL.Models.Cart", b =>
                 {
                     b.HasOne("Org_DAL.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Cart")
+                        .HasForeignKey("Org_DAL.Models.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Cart_User");
 
                     b.Navigation("User");
                 });
@@ -447,15 +419,13 @@ namespace Org_DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Org_DAL.Models.ProductDetail", "ProductDetail")
-                        .WithMany()
-                        .HasForeignKey("ProductDetailId")
+                    b.HasOne("Org_DAL.Models.Product", null)
+                        .WithOne("CartItem")
+                        .HasForeignKey("Org_DAL.Models.CartItem", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("ProductDetail");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Invoice", b =>
@@ -464,13 +434,15 @@ namespace Org_DAL.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("CouponId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Invoice_Coupon");
 
                     b.HasOne("Org_DAL.Models.User", "User")
                         .WithMany("Invoices")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Invoice_User");
 
                     b.Navigation("Coupon");
 
@@ -480,20 +452,22 @@ namespace Org_DAL.Migrations
             modelBuilder.Entity("Org_DAL.Models.InvoiceDetail", b =>
                 {
                     b.HasOne("Org_DAL.Models.Invoice", "Invoice")
-                        .WithMany("Invoices")
+                        .WithMany("InvoiceDetails")
                         .HasForeignKey("InvoiceId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_InvoiceDetail_Invoice");
 
-                    b.HasOne("Org_DAL.Models.ProductDetail", "ProductDetail")
-                        .WithMany()
-                        .HasForeignKey("ProductDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Org_DAL.Models.Product", "Product")
+                        .WithOne("InvoiceDetail")
+                        .HasForeignKey("Org_DAL.Models.InvoiceDetail", "ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_InvoiceDetail_ProductDetail");
 
                     b.Navigation("Invoice");
 
-                    b.Navigation("ProductDetail");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Product", b =>
@@ -502,30 +476,15 @@ namespace Org_DAL.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Org_DAL.Models.ProductDetail", b =>
-                {
-                    b.HasOne("Org_DAL.Models.CartItem", null)
-                        .WithMany("ProductDetails")
-                        .HasForeignKey("CartItemId");
-
-                    b.HasOne("Org_DAL.Models.Product", "Product")
-                        .WithMany("ProductDetails")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Category_Product");
 
                     b.HasOne("Org_DAL.Models.Sale", "Sale")
-                        .WithMany("ProductDetails")
+                        .WithMany("Products")
                         .HasForeignKey("SaleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasConstraintName("FK_Product_Sale");
 
-                    b.Navigation("Product");
+                    b.Navigation("Category");
 
                     b.Navigation("Sale");
                 });
@@ -547,13 +506,15 @@ namespace Org_DAL.Migrations
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRole_Role");
 
                     b.HasOne("Org_DAL.Models.User", "User")
-                        .WithMany("Roles")
+                        .WithMany("UserRole")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_UserRole_User");
 
                     b.Navigation("Role");
 
@@ -563,11 +524,6 @@ namespace Org_DAL.Migrations
             modelBuilder.Entity("Org_DAL.Models.Cart", b =>
                 {
                     b.Navigation("CartItem");
-                });
-
-            modelBuilder.Entity("Org_DAL.Models.CartItem", b =>
-                {
-                    b.Navigation("ProductDetails");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Category", b =>
@@ -582,12 +538,14 @@ namespace Org_DAL.Migrations
 
             modelBuilder.Entity("Org_DAL.Models.Invoice", b =>
                 {
-                    b.Navigation("Invoices");
+                    b.Navigation("InvoiceDetails");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Product", b =>
                 {
-                    b.Navigation("ProductDetails");
+                    b.Navigation("CartItem");
+
+                    b.Navigation("InvoiceDetail");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.Role", b =>
@@ -597,16 +555,19 @@ namespace Org_DAL.Migrations
 
             modelBuilder.Entity("Org_DAL.Models.Sale", b =>
                 {
-                    b.Navigation("ProductDetails");
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Org_DAL.Models.User", b =>
                 {
+                    b.Navigation("Cart")
+                        .IsRequired();
+
                     b.Navigation("Invoices");
 
-                    b.Navigation("Roles");
-
                     b.Navigation("UserAddresses");
+
+                    b.Navigation("UserRole");
                 });
 #pragma warning restore 612, 618
         }

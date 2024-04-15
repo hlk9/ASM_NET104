@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Org_DAL.Models;
 using Org_DAL.Repository;
 using OrganicWebApp.Models;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -37,6 +38,7 @@ namespace OrganicWebApp.Controllers
 
             else
             {
+
                 var listRole = _usrRoleRepos.GetByUserId(usr.Id);
                 string role = "";
                 if (listRole.Count > 0)
@@ -49,7 +51,22 @@ namespace OrganicWebApp.Controllers
                 _contextAccessor.HttpContext.Session.SetString("_Roles", role);
                 _contextAccessor.HttpContext.Session.SetString("_Name", usr.FullName);
                 _contextAccessor.HttpContext.Session.SetString("_UserName", usr.UserName);
+                _contextAccessor.HttpContext.Session.SetString("_UserId", usr.Id.ToString());
+                string usrId = HttpContext.Session.GetString("_UserId");
+                if (usrId != null)
+                {
+                    CartItemRepository _cartItemRepository = new CartItemRepository();
+                    CartRepository _cartRepository = new CartRepository();
 
+                    var cart = _cartRepository.GetbyUserId(Guid.Parse(usrId));
+                  
+                        _contextAccessor.HttpContext.Session.SetInt32("_CartId", cart.Id);
+                        _contextAccessor.HttpContext.Session.SetInt32("TotalInCart", _cartItemRepository.GetAllByIdCard(cart.Id).Count);
+                    _contextAccessor.HttpContext.Session.SetString("TotalInCartString", _cartItemRepository.GetAllByIdCard(cart.Id).Count.ToString());
+
+                    HttpContext.Session.SetInt32("TotalInCart", _cartItemRepository.GetAllByIdCard(cart.Id).Count);
+
+                }
 
                 return RedirectToAction("Index", "Home");
             }
@@ -106,6 +123,12 @@ namespace OrganicWebApp.Controllers
                 ViewBag.Error = "Tên tài khoản đã tồn tại";
 
             }
+
+            if (_userRepos.GetByEmail(email) != null)
+            {
+                ViewBag.Error = "Email đã tồn tại";
+
+            }
             else
             {
                 if (HashPassword(pass) != HashPassword(repass))
@@ -118,8 +141,8 @@ namespace OrganicWebApp.Controllers
                 usr.Email = email;
                 usr.Password = HashPassword(pass);
                 usr.FullName = fullName;
-                _userRepos.AddCustomer(usr);          
-           
+                _userRepos.AddCustomer(usr);
+
                 return RedirectToAction("Login");
             }
 

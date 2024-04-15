@@ -13,9 +13,6 @@ namespace Org_DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<CartItem> builder)
         {
-           builder.HasKey(x => x.Id);
-            builder.HasOne(c => c.Cart).WithMany(ct => ct.CartItem).HasConstraintName("FK_CartItem_Cart");
-            builder.HasOne(pd => pd.ProductDetail).WithOne(ci => ci.CartItem).HasForeignKey<CartItem>(p => p.ProductDetailId).HasConstraintName("FK_CartItem_ProductDetail");
        
 
 

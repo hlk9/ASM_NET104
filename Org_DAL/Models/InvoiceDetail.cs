@@ -14,11 +14,12 @@ namespace Org_DAL.Models
         [Key]
       public int Id { get; set; }
         public int InvoiceId {  get; set; }
-        [ForeignKey("InvoiceId")]
+     
         public virtual Invoice Invoice { get; set; }
-        public int ProducDetailtId { get; set; }
-        [ForeignKey("ProductDetailId")]
-        public virtual ProductDetail ProductDetail { get; set; }
+        public int ProductId { get; set; }
+     
+        public virtual Product Product { get; set; }
+
         public int Quantity { get; set; }
         public double Price { get; set; }
         public double Total { get; set;}

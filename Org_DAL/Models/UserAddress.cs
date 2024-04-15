@@ -12,8 +12,7 @@ namespace Org_DAL.Models
     {
         [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        [ForeignKey("UserId")]
+        public Guid UserId { get; set; }    
         public virtual User User { get; set; }
         public string Address { get; set; } 
         public string AddressType { get; set; }

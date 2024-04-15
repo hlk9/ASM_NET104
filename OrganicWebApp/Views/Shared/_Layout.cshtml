@@ -1,47 +1,125 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor contxt;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OrganicWebApp</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/OrganicWebApp.styles.css" asp-append-version="true" /> 
+    <link rel="stylesheet" href="~/OrganicWebApp.styles.css" asp-append-version="true" />
+    <script src="~/lib/font-fontawesome-ae333ffef2.js"></script>
 </head>
-<body>
+<body style="font-family: 'Roboto', sans-serif;">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg bg-white border-bottom sticky-top">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Org4nice</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold text-secondary fs-3" asp-area="" asp-controller="Home" asp-action="Index">Org<span class="text-success">4</span>nice</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark">Sản phẩm mới</a>
-                        </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle text-black" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Danh mục
-                            </a>
+                            </a>                       
+                         
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Rau củ</a></li>
-                                <li><a class="dropdown-item" href="#">Bánh</a></li>                         
-                                <li><a class="dropdown-item" href="#">Ngũ cốc</a></li>
+                                
+                                <li><a class="dropdown-item text-black" href="#">Rau củ</a></li>
+                                <li><a class="dropdown-item text-black" href="#">Bánh</a></li>
+                                <li><a class="dropdown-item text-black">Người dùng</a></li>
                             </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Product" asp-action="NewArrival">Sản phẩm mới</a>
+                        </li>
+
+
+                        @if (contxt.HttpContext.Session.GetString("_Roles")!=null&&contxt.HttpContext.Session.GetString("_Roles").Contains("1"))
+                        {
+                            <li class="nav-item dropdown text-black">
+                                <a class="nav-link text-black dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Quản lý
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item text-black" asp-controller="Product" asp-action="Index">Sản phẩm</a></li>
+                                    <li><a class="dropdown-item text-black" href="#">Danh mục</a></li>
+                                    <li><a class="dropdown-item text-black" asp-controller="User" asp-action="Index">Người dùng</a></li>
+                                    <li><a class="dropdown-item text-black">Nhân viên</a></li>
+                                    <li><a class="dropdown-item text-black">Hoá đơn</a></li>
+                                </ul>
+                            </li>
+                        }
+
+
                     </ul>
+                    <form class="d-flex me-4" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <div class="d-flex ms-2 me-2">
+                        <div class="d-flex justify-content-center align-content-center align-items-center">
+                            <div>
+                                <i class="fa-regular fa-user fs-4"></i>
+                            </div>
+                            <div class="d-flex flex-column fs-6 ms-2">
+                                <div style="font-size:.7rem">
+                                    Tài khoản
+                                </div>
+
+
+                                @if (contxt.HttpContext.Session.GetString("_Name") != "")
+                                {
+                                    <div style="font-size:.8rem">
+                                        <a class="text-decoration-none text-dark" asp-controller="Access" asp-action="Profile">@contxt.HttpContext.Session.GetString("_Name")</a>
+
+                                    </div>
+                                }
+
+                                @if (contxt.HttpContext.Session.GetString("_Name") == "" || contxt.HttpContext.Session.GetString("_Name") == null)
+                                {
+                                    <div style="font-size:.8rem">
+                                        <a class="text-decoration-none text-dark" asp-controller="Access" asp-action="Login">Đăng nhập</a>
+
+                                    </div>
+                                }
+
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-content-center align-items-center ms-3">
+                            <div>
+                                <i class="far fa-calendar fs-4"></i>
+                            </div>
+                            <div class="d-flex flex-column fs-6 ms-2">
+                                <div style="font-size:.7rem">
+                                    Giỏ hàng
+                                </div>
+                                <div style="font-size:.8rem">
+                                    
+                                        <a class="text-decoration-none text-dark" asp-action="Index" asp-controller="Cart">@contxt.HttpContext.Session.GetInt32("TotalInCart").ToString() Sản phẩm</a>
+                                   
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 pt-3">
             @RenderBody()
         </main>
     </div>
